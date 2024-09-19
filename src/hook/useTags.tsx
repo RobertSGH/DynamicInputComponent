@@ -28,6 +28,7 @@ export const useTags = () => {
 
   const removeTag = useCallback((index: number) => {
     setTags((prevTags) => prevTags.filter((_, i) => i !== index));
+    setError(null);
   }, []);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +40,26 @@ export const useTags = () => {
     setInputValue('');
   }, []);
 
+  const addTagAtPosition = (
+    tag: string,
+    position: number,
+    isTyped: boolean
+  ) => {
+    if (
+      tags.some(
+        (existingTag) => existingTag.name.toLowerCase() === tag.toLowerCase()
+      )
+    ) {
+      setError('Tag already exists');
+      return;
+    }
+    const updatedTags = [...tags];
+    updatedTags.splice(position, 0, { name: tag, isTyped });
+    setTags(updatedTags);
+  };
+
   return {
+    addTagAtPosition,
     tags,
     inputValue,
     error,
